@@ -32,62 +32,6 @@ namespace WebApi.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, students);
         }
 
-        [HttpGet]
-        [Route("api/Students/GetMarksUp80")]
-        public HttpResponseMessage GetMarksUp80()
-        {
-            Models.StudentsMock studentsMock = new Models.StudentsMock();
-            List<Models.RegisterModel> results = new List<Models.RegisterModel>();
-            List<Models.RegisterModel> students = studentsMock.GetMockData();
-
-            results = (from student in students
-                       where student.LanguageAndArts > 80 || student.Maths > 80 || student.Science > 80 || student.SocialStudies > 80
-                       select student).ToList();
-            return Request.CreateResponse(HttpStatusCode.OK, results);
-        }
-
-        [HttpGet]
-        [Route("api/Students/GetRecByField")]
-        public HttpResponseMessage GetRecByField(string Mark, string Value)
-        {
-            Models.StudentsMock studentsMock = new Models.StudentsMock();
-            List<Models.RegisterModel> results = new List<Models.RegisterModel>();
-            List<Models.RegisterModel> students = studentsMock.GetMockData();
-            switch (Mark)
-            {
-                case "Student":
-                    results = (from student in students
-                               where student.Student == Value
-                               select student).ToList();
-                    break;
-                case "LanguageAndArts":
-                    results = (from student in students
-                               where student.LanguageAndArts == int.Parse(Value)
-                               select student).ToList();
-                    break;
-                case "Science":
-                    results = (from student in students
-                               where student.Science == int.Parse(Value)
-                               select student).ToList();
-                    break;
-                case "SocialStudies":
-                    results = (from student in students
-                               where student.SocialStudies == int.Parse(Value)
-                               select student).ToList();
-                    break;
-                case "Maths":
-                    results = (from student in students
-                               where student.Maths == int.Parse(Value)
-                               select student).ToList();
-                    break;
-                default:
-                    results = students;
-                    break;
-            }
-
-            return Request.CreateResponse(HttpStatusCode.OK, results);
-        }
-
         /// <summary>
         /// Get all the information without filters
         /// </summary>
@@ -101,25 +45,7 @@ namespace WebApi.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, students);
         }
 
-        /// <summary>
-        /// returns filtered by Mark if the record has it's mark upper 80
-        /// </summary>
-        /// <param name="mark">Mark to filter</param>
-        /// <returns>Array of Records filtered by mark</returns>
-        [HttpPost]
-        [Route("api/Students/GetMarksUpper80")]
-        public HttpResponseMessage GetMarksUpper80()
-        {
-            Models.StudentsMock studentsMock = new Models.StudentsMock();
-            List<Models.RegisterModel> results = new List<Models.RegisterModel>();
-            List<Models.RegisterModel> students = studentsMock.GetMockData();
-
-            results = (from student in students
-                      where student.LanguageAndArts > 80 || student.Maths > 80 || student.Science > 80 || student.SocialStudies > 80
-                       select student).ToList();
-            return Request.CreateResponse(HttpStatusCode.OK, results);
-        }
-
+        
         /// <summary>
         /// Gets the information filtered by an specific field
         /// </summary>
@@ -174,17 +100,13 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("api/Students/GetByFiters")]
-        public HttpResponseMessage GetByFilters(string Student, 
-            int LanguageAndArts, 
-            int Science, 
-            int SocialStudies,
-            int Maths)
+        public HttpResponseMessage GetByFilters(Models.AllFieldsFilters filters)
         {
             Models.StudentsMock studentsMock = new Models.StudentsMock();
-            List<Models.RegisterModel> results = new List<Models.RegisterModel>();
             List<Models.RegisterModel> students = studentsMock.GetMockData();
-            
-            return Request.CreateResponse(HttpStatusCode.OK, Filter(results,Student,LanguageAndArts,Science,SocialStudies,Maths));
+
+            return Request.CreateResponse(HttpStatusCode.OK, Filter(students,
+                filters.Student, filters.LanguageAndArts, filters.Science, filters.SocialStudies, filters.Maths));
         }
 
 

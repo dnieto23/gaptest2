@@ -15,7 +15,7 @@ namespace WebApi.Models
     {
         public string Student { get; set; }
         public int LanguageAndArts { get; set; }
-        public int Sciece { get; set; }
+        public int Science { get; set; }
         public int SocialStudies { get; set; }
         public int Maths { get; set; }
     }
